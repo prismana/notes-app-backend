@@ -33,6 +33,32 @@ export const createNote = (req, res, next) => {
 };
 
 
+// Fungsi update note
+export const editNoteById = (req, res) => {
+    const { id } = req.params;
+
+    const { title, tags, body } = req.body;
+    const updateAt = new Date().toISOString();
+
+    // Cari note menggunakan index id
+    const index = notes.findIndex((n) => n.id === id);
+
+    if (index !== -1) {
+        // Update menggunakan spread operator
+        notes[index] = { ...notes[index], title, tags, body, updateAt };
+        return res.json({
+            status: 'success',
+            message: 'Catatan berhasil diperbarui'
+        });
+    }
+
+    res.status(404).json({
+        status: 'fail',
+        message: 'Id Catatan tidak ditemukan'
+    });
+}
+
+
 // Fungsi mendapatkan list notes
 export const getNotes = (req, res) => {
     res.json({
@@ -61,3 +87,24 @@ export const getNotesById = (req, res) => {
         message: 'Catatan tidak ditemukan'
     });
 }
+
+
+// Delete note
+export const deleteNoteById = (req, res) => {
+    const { id } = req.params;
+
+    const index = notes.findIndex((n) => n.id === id);
+
+    if (index !== -1) {
+        notes.splice(index, 1);
+        return res.json({
+            status: 'success',
+            message: 'Catatan berhasil dihapus'
+        });
+    }
+
+    res.status(404).json({
+        status: 'fail',
+        message: 'Gagal menghapus catatan. Id tidak ditemukan'
+    });
+} 
