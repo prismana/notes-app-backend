@@ -1,6 +1,7 @@
-import { nanoid }  from 'nanoid';
+import { nanoid } from 'nanoid';
 import notes from './notes.js';
 
+// Fungsi buat note
 export const createNote = (req, res, next) => {
     const { title = 'untitled', tags, body } = req.body;
     const id = nanoid(16); // Generate id menggunakan lib nanoid
@@ -30,3 +31,33 @@ export const createNote = (req, res, next) => {
     });
 
 };
+
+
+// Fungsi mendapatkan list notes
+export const getNotes = (req, res) => {
+    res.json({
+        status: "success",
+        data: { notes }
+    });
+}
+
+
+// Get notes bersasarkan id
+export const getNotesById = (req, res) => {
+    const { id } = req.params;
+
+    // Temukan note dengan find
+    const note = notes.find((n) => n.id === id);
+
+    if (note) {
+        res.json({
+            status: 'success',
+            data: { note }
+        });
+    }
+
+    res.status(404).json({
+        status: 'fail',
+        message: 'Catatan tidak ditemukan'
+    });
+}
